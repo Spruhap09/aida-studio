@@ -1,0 +1,26 @@
+# secrets
+.env
+.env.local
+**/.env
+**/.env.local
+
+# python
+api/.venv/
+api/**/__pycache__/
+api/**/*.pyc
+api/.pytest_cache/
+api/data/aida.db
+api/data/app.db
+api/data/traces.jsonl
+api/data/uploads/
+
+# node
+web/node_modules/
+web/.next/
+web/out/
+
+# local node bootstrap
+vendor/
+
+# os
+.DS_Store
