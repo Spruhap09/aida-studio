@@ -1,0 +1,51 @@
+[
+  {
+    "id": "pinch-pot",
+    "title": "Pinch pot",
+    "level": "beginner",
+    "minutes": 40,
+    "body": "Start with a well-wedged ball. Thumb in the center, then pinch while rotating so walls stay even. Stop when walls are about as thick as your pinky. Smooth the rim last. This is the fastest way to feel how clay remembers pressure."
+  },
+  {
+    "id": "coil-cup",
+    "title": "Coil cup",
+    "level": "beginner",
+    "minutes": 60,
+    "body": "Roll even coils on a dry table — if they flatten, the clay is too soft. Score and slip every join. Blend the inside first so the vessel is structurally one piece, then decide how visible you want the coils on the outside."
+  },
+  {
+    "id": "slab-tile",
+    "title": "Slab tile",
+    "level": "beginner",
+    "minutes": 50,
+    "body": "Roll between two slats so thickness is even. Compress with a rib on both sides to reduce warping. Cut, then let it set to leather-hard before adding texture. Dry under plastic, then slowly uncovered, or the edges will curl."
+  },
+  {
+    "id": "wedging",
+    "title": "Wedging (why pots crack)",
+    "level": "beginner",
+    "minutes": 20,
+    "body": "Wedging lines up clay particles and removes air. If you skip it, trapped air expands in the kiln. Use spiral or ram's-head wedging until a cut slice looks smooth, not marbled with dry bits."
+  },
+  {
+    "id": "drying",
+    "title": "Drying without disaster",
+    "level": "beginner",
+    "minutes": 15,
+    "body": "Clay shrinks as water leaves. Thick bases and thin rims dry at different speeds and split. Even the walls, dry slow, and never force a piece with a hairdryer. Leather-hard is for carving; bone-dry is for bisque."
+  },
+  {
+    "id": "joining",
+    "title": "Score, slip, join",
+    "level": "beginner",
+    "minutes": 15,
+    "body": "Two leather-hard pieces will not fuse if you just press them. Score a hatch, add slip (clay + water), press, and blend. If a handle pops off later, the join was dry or unscored."
+  },
+  {
+    "id": "common-failures",
+    "title": "Common beginner failures",
+    "level": "beginner",
+    "minutes": 15,
+    "body": "S-cracks in the bottom: compress the base. Warped plates: uneven slabs or fast drying. Explosions: trapped air or wet clay in a kiln. Sharp rims: sponge them. If a piece is frustrating, it is usually moisture, not talent."
+  }
+]
