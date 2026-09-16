@@ -24,3 +24,8 @@ vendor/
 
 # os
 .DS_Store
+
+# local sqlite
+*.db
+/data/
+

@@ -24,9 +24,9 @@ export default function HomePage() {
           />
           <StudioCard
             href="/clay"
-            kicker="Thin on purpose — beginner hand-building"
+            kicker="Never used clay? Start here"
             title="Clay studio"
-            body="Pinch, coil, slab, drying, joining. Lessons are grounded in a local pack so the agent cannot invent kiln schedules."
+            body="Seven short how-tos: knead, make a bowl, stick pieces on, then a cup or a tile. Everyday words, not studio jargon."
           />
         </div>
       </main>

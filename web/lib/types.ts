@@ -54,6 +54,22 @@ export type Lesson = {
   level: string;
   minutes: number;
   body: string;
+  plain?: string;
+  why?: string;
+  doneWhen?: string;
+  steps?: string[];
+  terms?: { word: string; meaning: string }[];
+  ask?: string;
+  video?: {
+    youtubeId: string;
+    title: string;
+    credit: string;
+  };
+  videos?: {
+    youtubeId: string;
+    title: string;
+    credit: string;
+  }[];
 };
 
 export type CatalogItem = {
@@ -64,6 +80,7 @@ export type CatalogItem = {
   level: string;
   techniques: string[];
   why: string;
+  url?: string;
 };
 
 export type Profile = {

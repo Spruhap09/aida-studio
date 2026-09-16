@@ -5,22 +5,24 @@ The supervisor only routes. Specialists call tools. Color math never goes throug
 
 from __future__ import annotations
 
+import json
+import re
 from typing import Literal
 
 from langchain_core.messages import AIMessage, SystemMessage
+from langchain_core.runnables import RunnableConfig
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import END, START, StateGraph
 from langgraph.prebuilt import create_react_agent
 from langgraph.types import Command, interrupt
 from pydantic import BaseModel, Field
 
+from app.agents.session import get_upload, remember_pattern
 from app.agents.llm import get_llm
 from app.agents.state import StudioState
 from app.agents.tools import (
-    current_image,
     explain_technique,
     get_clay_lesson,
-    last_pattern_out,
     read_skill_profile,
     recommend_patterns,
     update_skill_profile,
@@ -45,6 +47,10 @@ Pick one specialist:
 - clay_coach: pinch pots, coils, slabs, drying, wedging, beginner clay troubleshooting
 
 If the message mixes topics, pick the primary intent. Cross-stitch is the default if unclear.
+
+Reply with JSON only, no markdown:
+{"agent": "recommender", "rationale": "one sentence"}
+agent must be one of: pattern_converter, stitch_coach, recommender, clay_coach
 """
 
 CONVERTER_PROMPT = """You are PatternConverter. You turn photos into cross-stitch charts.
@@ -60,18 +66,23 @@ Be specific and practical. No fluff.
 """
 
 REC_PROMPT = """You are Recommender. Call recommend_patterns and explain why the top 2–3 fit.
-These are original briefs, not commercial licensed charts. Suggest the user convert their own photo in that spirit.
+Each catalog item includes a url. Always show it as a markdown link like [Find similar free patterns](url) so the stitcher can click it.
+These briefs are original ideas, not licensed charts. The link searches for similar free patterns.
 """
 
-CLAY_PROMPT = """You are ClayCoach for a complete beginner. Call get_clay_lesson before giving process advice.
-Do not invent kiln schedules, cone numbers, or glaze chemistry. If asked, say v1 only covers hand-building basics.
-Stay encouraging and concrete.
+CLAY_PROMPT = """You are ClayCoach for someone who has never touched clay.
+Call get_clay_lesson before giving process advice.
+Talk like a patient friend at the kitchen table: short sentences, numbered steps, no studio slang unless you define it in the same breath (e.g. "slip — that's just clay mixed with water").
+Prefer everyday words: knead, scratch, paste, snake, bag, pinky-thick. Say "small bowl" not "pinch pot", "clay snakes" not "coils", "clay-water paste" not "slip" unless you define the studio word in the same breath.
+These how-tos are for air-dry clay that hardens on a shelf. Do not invent kiln temperatures, cone numbers, or glaze recipes. If asked about firing, say this studio only covers making and air-drying by hand.
+Offer one next thing to try.
 """
 
 
-def converter_node(state: StudioState) -> dict:
+def converter_node(state: StudioState, config: RunnableConfig) -> dict:
     """Deterministic convert + human approval. The LLM is not asked to pick floss."""
-    image = current_image.get()
+    thread_id = (config.get("configurable") or {}).get("thread_id")
+    image = get_upload(thread_id)
     if image is None:
         return {
             "messages": [
@@ -85,7 +96,7 @@ def converter_node(state: StudioState) -> dict:
     colors = int(state.get("max_colors") or 16)
     aida = int(state.get("aida_count") or 14)
     pattern = convert_image(image, width, colors, aida)
-    last_pattern_out.set(pattern)
+    remember_pattern(pattern, thread_id)
 
     decision = interrupt(
         {
@@ -109,7 +120,7 @@ def converter_node(state: StudioState) -> dict:
 
     if new_colors != colors:
         pattern = convert_image(image, width, new_colors, aida)
-        last_pattern_out.set(pattern)
+        remember_pattern(pattern, thread_id)
 
     summary = (
         f"Chart is {pattern['width']}×{pattern['height']} on {aida}-count "
@@ -121,15 +132,28 @@ def converter_node(state: StudioState) -> dict:
     return {"messages": [AIMessage(content=summary)], "last_pattern": pattern}
 
 
+def _parse_route(text: str) -> RouteDecision:
+    cleaned = text.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*|\s*```$", "", cleaned, flags=re.IGNORECASE).strip()
+    start, end = cleaned.find("{"), cleaned.rfind("}")
+    if start >= 0 and end > start:
+        cleaned = cleaned[start : end + 1]
+    try:
+        return RouteDecision.model_validate(json.loads(cleaned))
+    except (json.JSONDecodeError, ValueError):
+        return RouteDecision(agent="stitch_coach", rationale="Could not parse route; defaulting to stitch coach.")
+
+
 def supervisor_node(state: StudioState) -> Command:
-    llm = get_llm().with_structured_output(RouteDecision)
-    decision = llm.invoke(
+    raw = get_llm(streaming=False).invoke(
         [
             SystemMessage(content=SUPERVISOR_PROMPT),
             *state["messages"][-8:],
         ]
     )
-    return Command(goto=decision.agent)
+    text = raw.content if isinstance(raw.content, str) else str(raw.content)
+    return Command(goto=_parse_route(text).agent)
 
 
 def build_graph():

@@ -48,6 +48,16 @@ Open [http://localhost:3000](http://localhost:3000).
 - **Convert a photo** works with no API key.
 - **Chat with agents** needs a key in `api/.env`.
 
+## Host it (portfolio demo)
+
+This is two services. The UI is Next.js (`web/`). The API is FastAPI (`api/`).
+
+1. Push the repo to GitLab.
+2. Deploy `api/` on [Render](https://render.com) (see `render.yaml`). Set `OPENAI_API_KEY` and `CORS_ORIGINS` to your Vercel URL.
+3. Deploy `web/` on [Vercel](https://vercel.com). Root directory: `web`. Set `API_URL` to the Render URL (no trailing slash).
+
+Photo convert and clay lessons work without a model key. Chat needs a key and will spend credits if you leave it public — cap usage in the OpenAI dashboard.
+
 ## Layout
 
 ```

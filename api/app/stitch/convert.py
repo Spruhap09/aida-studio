@@ -22,14 +22,17 @@ def convert_image(
     max_colors: int = 16,
     aida_count: int = 14,
 ) -> dict[str, Any]:
-    stitch_width = int(max(16, min(160, stitch_width)))
+    stitch_width = int(max(16, min(220, stitch_width)))
     max_colors = int(max(4, min(60, max_colors)))
     aida_count = int(max(11, min(22, aida_count)))
 
     image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     src_w, src_h = image.size
     stitch_height = max(8, round(src_h / src_w * stitch_width))
-    small = image.resize((stitch_width, stitch_height), Image.Resampling.LANCZOS)
+    # BOX: each stitch is the average of its source block (sharp pixelation).
+    # LANCZOS blurs edges and muddies floss matching.
+    resample = Image.Resampling.NEAREST if src_w <= stitch_width else Image.Resampling.BOX
+    small = image.resize((stitch_width, stitch_height), resample)
     labs = rgb_to_lab(np.asarray(small, dtype=np.float64).reshape(-1, 3))
 
     unique = np.unique(np.asarray(small).reshape(-1, 3), axis=0)

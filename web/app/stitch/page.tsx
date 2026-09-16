@@ -9,9 +9,14 @@ import { convertPattern, fetchCatalog, fetchHealth, fileToDataUrl } from "@/lib/
 import { readSse, studioChat, studioResume } from "@/lib/sse";
 import type { CatalogItem, InterruptEvent, Pattern } from "@/lib/types";
 
+function looksInternal(text: string) {
+  const trimmed = text.trim();
+  return trimmed.startsWith("{") && /"(rationale|display_name|technique|explanation|known_techniques)"/.test(trimmed);
+}
+
 export default function StitchPage() {
   const [file, setFile] = useState<File | null>(null);
-  const [width, setWidth] = useState(80);
+  const [width, setWidth] = useState(100);
   const [colors, setColors] = useState(16);
   const [aida, setAida] = useState(14);
   const [pattern, setPattern] = useState<Pattern | null>(null);
@@ -90,13 +95,16 @@ export default function StitchPage() {
     await readSse(res, (event) => {
       if (event.type === "thread" && event.thread_id) setThreadId(event.thread_id);
       if (event.type === "agent") {
+        if (event.name === "supervisor") return;
+        if (event.name !== agent) acc = "";
         agent = event.name;
-        acc = "";
       }
       if (event.type === "token") {
+        if (looksInternal(event.text) || event.agent === "supervisor") return;
         acc += event.text;
         const snapshot = acc;
         const who = event.agent || agent;
+        if (who === "supervisor") return;
         setLog((prev) => {
           const next = [...prev];
           const last = next[next.length - 1];
@@ -109,7 +117,17 @@ export default function StitchPage() {
         });
       }
       if (event.type === "message") {
-        setLog((prev) => [...prev, { agent: event.agent || agent, text: event.text }]);
+        if (looksInternal(event.text) || event.agent === "supervisor") return;
+        const who = event.agent || agent;
+        setLog((prev) => {
+          const next = [...prev];
+          const last = next[next.length - 1];
+          if (last && last.agent === who && last.agent !== "you") {
+            next[next.length - 1] = { agent: who, text: event.text };
+            return next;
+          }
+          return [...prev, { agent: who, text: event.text }];
+        });
       }
       if (event.type === "pattern") setPattern(event.pattern);
       if (event.type === "interrupt") setInterrupt(event);
@@ -120,7 +138,7 @@ export default function StitchPage() {
   return (
     <div className="min-h-screen">
       <Nav active="stitch" />
-      <main className="mx-auto grid max-w-6xl gap-8 px-6 py-10 lg:grid-cols-[1.15fr_0.85fr]">
+      <main className="mx-auto grid max-w-6xl items-start gap-8 px-6 py-10 lg:grid-cols-[1.15fr_0.85fr]">
         <div className="space-y-6">
           <header>
             <p className="text-sm uppercase tracking-[0.18em] text-thread">Cross-stitch</p>
@@ -145,7 +163,7 @@ export default function StitchPage() {
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             />
             <div className="mt-4 grid grid-cols-3 gap-3 text-sm">
-              <NumberField label="Stitch width" value={width} min={24} max={160} onChange={setWidth} />
+              <NumberField label="Stitch width" value={width} min={24} max={220} onChange={setWidth} />
               <NumberField label="Max colors" value={colors} min={4} max={40} onChange={setColors} />
               <NumberField label="Aida count" value={aida} min={11} max={22} onChange={setAida} />
             </div>
@@ -186,19 +204,31 @@ export default function StitchPage() {
                     <p className="mt-2 text-xs text-ink/50">
                       ~{item.hours}h · {item.colors} colors · {item.techniques.join(", ")}
                     </p>
+                    {item.url && (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-2 inline-block text-xs font-medium text-moss underline underline-offset-2 hover:text-ink"
+                      >
+                        Find similar free patterns
+                      </a>
+                    )}
                   </article>
                 ))}
               </div>
             </section>
           )}
         </div>
-        <ChatPanel
-          log={log}
-          busy={chatBusy}
-          interrupt={interrupt}
-          onSend={handleChat}
-          onResume={handleResume}
-        />
+        <aside className="min-h-0 w-full lg:sticky lg:top-20 lg:self-start">
+          <ChatPanel
+            log={log}
+            busy={chatBusy}
+            interrupt={interrupt}
+            onSend={handleChat}
+            onResume={handleResume}
+          />
+        </aside>
       </main>
     </div>
   );

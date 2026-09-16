@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+from urllib.parse import quote_plus
+
+
+def _find(query: str) -> str:
+    return f"https://www.google.com/search?q={quote_plus(query + ' free cross stitch pattern')}"
+
+
 CATALOG = [
     {
         "id": "olive-sprig",
@@ -9,6 +16,7 @@ CATALOG = [
         "level": "confident beginner",
         "techniques": ["full_cross", "backstitch"],
         "why": "Clean shapes, limited palette, a little backstitch for stems.",
+        "url": _find("olive branch botanical sampler"),
     },
     {
         "id": "lunar-phases",
@@ -18,6 +26,7 @@ CATALOG = [
         "level": "confident beginner",
         "techniques": ["full_cross"],
         "why": "Repeating circles teach consistency without a huge color count.",
+        "url": _find("moon phases"),
     },
     {
         "id": "folk-moth",
@@ -27,6 +36,7 @@ CATALOG = [
         "level": "intermediate",
         "techniques": ["full_cross", "backstitch"],
         "why": "More color changes in the wings — a gentle confetti step-up.",
+        "url": _find("folk moth"),
     },
     {
         "id": "geometric-tile",
@@ -36,6 +46,7 @@ CATALOG = [
         "level": "intermediate",
         "techniques": ["full_cross", "fractional"],
         "why": "Harder because of precise counting, not because of 40 floss colors.",
+        "url": _find("geometric blackwork tile"),
     },
     {
         "id": "tiny-still-life",
@@ -45,6 +56,7 @@ CATALOG = [
         "level": "intermediate",
         "techniques": ["full_cross", "blended_threads"],
         "why": "Blending on the fruit is the stretch technique.",
+        "url": _find("citrus fruit still life"),
     },
     {
         "id": "house-portrait",
@@ -54,6 +66,7 @@ CATALOG = [
         "level": "advanced",
         "techniques": ["full_cross", "backstitch", "fractional"],
         "why": "Architecture forces fractionals and patient counting.",
+        "url": _find("small house portrait"),
     },
     {
         "id": "botanical-alphabet",
@@ -63,6 +76,7 @@ CATALOG = [
         "level": "intermediate",
         "techniques": ["full_cross", "backstitch"],
         "why": "Letterforms plus leaves: readable shapes with decorative extras.",
+        "url": _find("botanical alphabet floral letter"),
     },
     {
         "id": "night-window",
@@ -72,6 +86,7 @@ CATALOG = [
         "level": "advanced",
         "techniques": ["full_cross", "blended_threads", "backstitch"],
         "why": "Dark values and tiny lights — blending without a huge palette.",
+        "url": _find("night window city lights"),
     },
 ]
 

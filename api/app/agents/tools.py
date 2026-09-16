@@ -1,17 +1,14 @@
 from __future__ import annotations
 
 import json
-from contextvars import ContextVar
 
 from langchain_core.tools import tool
 
+from app.agents.session import get_upload, remember_pattern
 from app.clay.lessons import get_lesson
 from app.db import get_profile, save_profile
 from app.stitch.catalog import search_catalog
 from app.stitch.convert import convert_image
-
-current_image: ContextVar[bytes | None] = ContextVar("current_image", default=None)
-last_pattern_out: ContextVar[dict | None] = ContextVar("last_pattern_out", default=None)
 
 TECHNIQUES = {
     "full_cross": "The basic X. Keep / and \\ tension even so the top stitch always leans the same way.",
@@ -25,10 +22,11 @@ TECHNIQUES = {
 @tool
 def convert_uploaded_image(stitch_width: int = 80, max_colors: int = 16, aida_count: int = 14) -> str:
     """Convert the photo the user uploaded into a cross-stitch pattern with DMC floss."""
-    image = current_image.get()
+    image = get_upload()
     if not image:
         return json.dumps({"error": "No image uploaded. Ask the user to attach a photo."})
     pattern = convert_image(image, stitch_width, max_colors, aida_count)
+    remember_pattern(pattern)
     slim = {
         "width": pattern["width"],
         "height": pattern["height"],
