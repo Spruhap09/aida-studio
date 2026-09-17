@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  background: #f4eadc;
+  color: #2a2118;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 12% 8%, rgba(196, 120, 91, 0.12), transparent 32%),
+    radial-gradient(circle at 88% 0%, rgba(63, 92, 75, 0.1), transparent 28%);
+}
+
+.paper-grid {
+  background-image:
+    linear-gradient(rgba(42, 33, 24, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(42, 33, 24, 0.04) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
