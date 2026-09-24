@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spruha Paradkar — software engineer</title>
+    <meta
+      name="description"
+      content="Software engineer at Goldman Sachs. Aida is a full-stack AI studio for cross-stitch and beginner clay. Resume and IEEE Aerospace 2025 paper below."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="wrap nav">
+      <p class="wordmark">Spruha Paradkar</p>
+      <nav>
+        <a href="#work">Work</a>
+        <a href="#writing">Writing</a>
+        <a href="./files/resume.pdf">Resume</a>
+        <a href="https://github.com/Spruhap09">GitHub</a>
+        <a href="https://www.linkedin.com/in/spruha-paradkar">LinkedIn</a>
+      </nav>
+    </header>
+
+    <main id="main" class="wrap">
+      <section class="hero">
+        <p class="kicker">Software engineer · Goldman Sachs · Dallas</p>
+        <h1>I build products where the model is only used when it should be.</h1>
+        <p class="lede">
+          Two years on a global full-stack platform (Java, Scala, TypeScript). Side project below:
+          a live studio for cross-stitch and beginner clay — agents for coaching, color science for
+          the chart.
+        </p>
+        <div class="actions">
+          <a class="btn primary" href="./files/resume.pdf">Resume (PDF)</a>
+          <a
+            class="btn"
+            href="https://ieeexplore.ieee.org/document/11068403/authors#authors"
+            target="_blank"
+            rel="noopener noreferrer"
+            >IEEE paper</a
+          >
+          <a class="btn" href="https://aida-studio-2b2jpbye2-spruhas-passion-project.vercel.app">Open Aida</a>
+        </div>
+      </section>
+
+      <section id="work" class="block">
+        <h2>Featured project</h2>
+        <article class="card">
+          <p class="kicker">Next.js · FastAPI · LangGraph</p>
+          <h3>Aida — stitch &amp; clay studio</h3>
+          <p>
+            A supervisor agent routes to four specialists (pattern conversion, stitch coaching,
+            recommendations, clay). Photos become DMC charts with Lab clustering and CIEDE2000
+            matching, then a human approves the palette before the graph continues. Clay lessons
+            are grounded in a local pack so the model cannot invent kiln facts.
+          </p>
+          <ul>
+            <li>Deterministic image-to-pattern pipeline — the LLM never invents floss codes</li>
+            <li>Human-in-the-loop interrupt on palette approval</li>
+            <li>SSE from Python to the Next.js UI; API keys stay on the server</li>
+          </ul>
+          <div class="actions">
+            <a class="btn primary" href="https://aida-studio-2b2jpbye2-spruhas-passion-project.vercel.app">Live demo</a>
+            <a class="btn" href="https://github.com/Spruhap09/aida-studio">Source on GitHub</a>
+          </div>
+        </article>
+      </section>
+
+      <section id="writing" class="block">
+        <h2>Resume &amp; writing</h2>
+        <div class="grid">
+          <article class="card">
+            <p class="kicker">PDF</p>
+            <h3>Resume</h3>
+            <p>Goldman Sachs, Stevens CS (summa cum laude), and selected work.</p>
+            <a class="btn primary" href="./files/resume.pdf">Open resume</a>
+          </article>
+          <article class="card">
+            <p class="kicker">IEEE Aerospace Conference 2025</p>
+            <h3>Enhanced UAV Classification: Gaining Deeper Insights from Mechanical Vibration Over RF Characteristics</h3>
+            <p>
+              Peer-reviewed paper from research at Stevens. Mechanical vibration plus RF for UAV
+              classification; IEEE Xplore.
+            </p>
+            <a
+              class="btn primary"
+              href="https://ieeexplore.ieee.org/document/11068403/authors#authors"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Open on IEEE Xplore</a
+            >
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="wrap foot">
+      <p>Spruha Paradkar</p>
+      <p>
+        <a href="mailto:spruha2001@gmail.com">spruha2001@gmail.com</a>
+        ·
+        <a href="https://github.com/Spruhap09">GitHub</a>
+        ·
+        <a href="https://www.linkedin.com/in/spruha-paradkar">LinkedIn</a>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -52,17 +52,27 @@ Open [http://localhost:3000](http://localhost:3000).
 
 This is two services. The UI is Next.js (`web/`). The API is FastAPI (`api/`).
 
-1. Push the repo to GitLab.
+1. Push the repo to GitHub.
 2. Deploy `api/` on [Render](https://render.com) (see `render.yaml`). Set `OPENAI_API_KEY` and `CORS_ORIGINS` to your Vercel URL.
 3. Deploy `web/` on [Vercel](https://vercel.com). Root directory: `web`. Set `API_URL` to the Render URL (no trailing slash).
 
 Photo convert and clay lessons work without a model key. Chat needs a key and will spend credits if you leave it public — cap usage in the OpenAI dashboard.
+
+## Personal site (resume + paper + Aida)
+
+A one-page site lives in `site/`. It is a **third** Vercel project (do not change the Aida root directory).
+
+1. Put `resume.pdf` and `paper.pdf` in `site/files/`.
+2. Edit `site/index.html` if you need to change the Aida live URL, paper title, or email.
+3. In Vercel: **Add New → Project** → same GitHub repo → Root Directory **`site`** → Deploy. No env vars.
+4. Put *this* Vercel URL on applications. Link out to the Aida demo from there.
 
 ## Layout
 
 ```
 web/     Next.js UI (chart viewer, chat, clay lessons)
 api/     FastAPI + LangGraph + stitch pipeline
+site/    Personal page (resume, paper, link to Aida)
 api/app/agents/   supervisor graph
 api/app/stitch/   color science, DMC matching, difficulty
 api/app/clay/     grounded beginner lessons
