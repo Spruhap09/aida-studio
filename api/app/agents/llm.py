@@ -35,7 +35,7 @@ def get_llm(streaming: bool = True):
             disable_streaming=not streaming,
         )
     raise LlmNotConfigured(
-        "No LLM key set. Add OPENAI_API_KEY or ANTHROPIC_API_KEY to api/.env to talk to the agents."
+        "No LLM key set. Add OPENAI_API_KEY on the API host to talk to the agents."
     )
 
 

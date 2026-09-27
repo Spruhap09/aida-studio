@@ -1,5 +1,15 @@
 import type { ChatEvent } from "./types";
 
+function detailFromBody(text: string) {
+  try {
+    const parsed = JSON.parse(text) as { detail?: unknown };
+    if (typeof parsed.detail === "string") return parsed.detail;
+  } catch {
+    /* not JSON */
+  }
+  return text || "Request failed";
+}
+
 export async function readSse(
   response: Response,
   onEvent: (event: ChatEvent) => void,
@@ -40,8 +50,7 @@ export async function studioChat(body: {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text);
+    throw new Error(detailFromBody(await res.text()));
   }
   return res;
 }
@@ -56,6 +65,6 @@ export async function studioResume(body: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) throw new Error(detailFromBody(await res.text()));
   return res;
 }

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { WarmApi } from "@/components/WarmApi";
 import "./globals.css";
 
 export const metadata = {
@@ -17,7 +18,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           rel="stylesheet"
         />
       </head>
-      <body className="min-h-screen font-sans antialiased">{children}</body>
+      <body className="min-h-screen font-sans antialiased">
+        <WarmApi />
+        {children}
+      </body>
     </html>
   );
 }

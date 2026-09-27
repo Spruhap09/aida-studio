@@ -5,7 +5,9 @@ import { ChartViewer } from "@/components/ChartViewer";
 import { ChatPanel } from "@/components/ChatPanel";
 import { Nav } from "@/components/Nav";
 import { PaletteLegend } from "@/components/PaletteLegend";
-import { convertPattern, fetchCatalog, fetchHealth, fileToDataUrl } from "@/lib/api";
+import { ApiStatusBanner } from "@/components/ApiStatusBanner";
+import { convertPattern, fetchCatalog, fileToDataUrl } from "@/lib/api";
+import { useApiHealth } from "@/lib/health";
 import { readSse, studioChat, studioResume } from "@/lib/sse";
 import type { CatalogItem, InterruptEvent, Pattern } from "@/lib/types";
 
@@ -22,17 +24,14 @@ export default function StitchPage() {
   const [pattern, setPattern] = useState<Pattern | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [agentsOn, setAgentsOn] = useState(false);
   const [catalog, setCatalog] = useState<CatalogItem[]>([]);
+  const health = useApiHealth();
   const [log, setLog] = useState<{ agent?: string; text: string }[]>([]);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [interrupt, setInterrupt] = useState<InterruptEvent | null>(null);
   const [chatBusy, setChatBusy] = useState(false);
 
   useEffect(() => {
-    fetchHealth()
-      .then((h) => setAgentsOn(h.agents))
-      .catch(() => setAgentsOn(false));
     fetchCatalog()
       .then(setCatalog)
       .catch(() => setCatalog([]));
@@ -147,11 +146,7 @@ export default function StitchPage() {
               Conversion is Python: k-means in Lab, nearest DMC by CIEDE2000. Agents coach, route, and wait for
               palette approval.
             </p>
-            {!agentsOn && (
-              <p className="mt-3 rounded-xl bg-gold/20 px-3 py-2 text-sm">
-                Conversion works now. Add an API key to <code>api/.env</code> to enable the studio agents.
-              </p>
-            )}
+            <ApiStatusBanner health={health} chatLabel="Studio chat" />
           </header>
 
           <form onSubmit={onConvert} className="rounded-2xl border border-ink/10 bg-white/80 p-5 shadow-card">

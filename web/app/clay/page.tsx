@@ -4,7 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { ChatPanel } from "@/components/ChatPanel";
 import { LessonVideo } from "@/components/LessonVideo";
 import { Nav } from "@/components/Nav";
-import { fetchHealth, fetchLessons } from "@/lib/api";
+import { ApiStatusBanner } from "@/components/ApiStatusBanner";
+import { fetchLessons } from "@/lib/api";
+import { useApiHealth } from "@/lib/health";
 import fallbackLessons from "@/data/clay-lessons.json";
 import { readSse, studioChat } from "@/lib/sse";
 import type { Lesson } from "@/lib/types";
@@ -21,7 +23,7 @@ function clipsFor(lesson: Lesson) {
 
 export default function ClayPage() {
   const [lessons, setLessons] = useState<Lesson[]>(fallbackLessons as Lesson[]);
-  const [agentsOn, setAgentsOn] = useState(false);
+  const health = useApiHealth();
   const [log, setLog] = useState<{ agent?: string; text: string }[]>([]);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -35,9 +37,6 @@ export default function ClayPage() {
       .catch(() => {
         setLessons(fallbackLessons as Lesson[]);
       });
-    fetchHealth()
-      .then((h) => setAgentsOn(h.agents))
-      .catch(() => setAgentsOn(false));
   }, []);
 
   useEffect(() => {
@@ -120,11 +119,7 @@ export default function ClayPage() {
             <p className="font-medium text-ink">What you need</p>
             <p className="mt-1">A pack of air-dry clay, a fork, a cup of water, a plastic bag, and a table you can wipe.</p>
           </div>
-          {!agentsOn && (
-            <p className="mt-3 rounded-xl bg-gold/20 px-3 py-2 text-sm">
-              The coach on the right needs a connection. You can still follow every step on this page.
-            </p>
-          )}
+          <ApiStatusBanner health={health} chatLabel="The coach on the right" />
           {error && <p className="mt-3 text-sm text-thread">{error}</p>}
           <ol className="mt-8 space-y-5">
             {lessons.map((lesson) => {

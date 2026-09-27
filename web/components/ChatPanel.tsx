@@ -84,7 +84,7 @@ export function ChatPanel({
     <section className="flex h-[min(32rem,calc(100dvh-8rem))] max-h-[calc(100dvh-8rem)] min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-[linear-gradient(180deg,#faf6ef_0%,#f4eadc_100%)] shadow-card lg:h-[calc(100dvh-8rem)]">
       <header className="shrink-0 border-b border-ink/10 bg-white/70 px-5 py-4 backdrop-blur">
         <h2 className="font-display text-2xl">{title}</h2>
-        <p className="text-sm text-ink/60">{subtitle}</p>
+        <p className="text-sm text-ink/60">{busy ? "Waiting on a reply…" : subtitle}</p>
       </header>
       <div ref={scroller} className="min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain px-4 py-4">
         {log.length === 0 && (
@@ -117,20 +117,7 @@ export function ChatPanel({
             </article>
           );
         })}
-        {busy && (
-          <article className="flex gap-2.5">
-            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink/10 text-[11px] font-semibold text-ink/50">
-              …
-            </span>
-            <div className="rounded-2xl rounded-bl-md border border-ink/10 bg-white px-4 py-3 shadow-sm">
-              <span className="flex gap-1">
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss [animation-delay:-0.2s]" />
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss [animation-delay:-0.1s]" />
-                <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss" />
-              </span>
-            </div>
-          </article>
-        )}
+        {busy && <WaitNote />}
         {interrupt?.palette && onResume && (
           <div className="rounded-2xl border border-gold/50 bg-white p-4 shadow-sm">
             <p className="text-sm font-medium">Approve this palette?</p>
@@ -186,7 +173,7 @@ export function ChatPanel({
       >
         <input
           className="flex-1 rounded-full border border-ink/15 bg-paper px-4 py-2 text-sm outline-none focus:border-moss"
-          placeholder={placeholder}
+          placeholder={busy ? "Waiting for the studio…" : placeholder}
           value={text}
           onChange={(e) => setText(e.target.value)}
         />
@@ -195,7 +182,7 @@ export function ChatPanel({
           disabled={busy || !text.trim()}
           type="submit"
         >
-          Send
+          {busy ? "Waiting…" : "Send"}
         </button>
       </form>
     </section>
@@ -204,6 +191,38 @@ export function ChatPanel({
 
 function prettyAgent(id: string) {
   return id.replaceAll("_", " ");
+}
+
+function WaitNote() {
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setSeconds((n) => n + 1), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const copy =
+    seconds < 5
+      ? "Thinking…"
+      : seconds < 20
+        ? "Still working. The first reply can take about 30 seconds while the server wakes up — it is not broken."
+        : "Almost there. Free hosting sleeps when idle; this first message is waking it.";
+
+  return (
+    <article className="flex gap-2.5">
+      <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ink/10 text-[11px] font-semibold text-ink/50">
+        …
+      </span>
+      <div className="max-w-[85%] rounded-2xl rounded-bl-md border border-ink/10 bg-white px-4 py-3 shadow-sm">
+        <span className="flex gap-1">
+          <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss [animation-delay:-0.2s]" />
+          <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss [animation-delay:-0.1s]" />
+          <i className="h-1.5 w-1.5 animate-bounce rounded-full bg-moss" />
+        </span>
+        <p className="mt-2 text-sm leading-relaxed text-ink/70">{copy}</p>
+      </div>
+    </article>
+  );
 }
 
 function FormattedBody({ text }: { text: string }) {

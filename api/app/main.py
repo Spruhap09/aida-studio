@@ -137,7 +137,7 @@ async def studio_chat(body: ChatRequest):
     if not llm_ready():
         raise HTTPException(
             503,
-            "Add OPENAI_API_KEY or ANTHROPIC_API_KEY to api/.env to talk with the agents. Image conversion still works without a key.",
+            "Chat is off until OPENAI_API_KEY is set on the API host. Photo conversion still works.",
         )
 
     thread_id = body.thread_id or str(uuid.uuid4())
