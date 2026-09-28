@@ -55,6 +55,7 @@ export function ChatPanel({
   busy,
   interrupt,
   log,
+  error = null,
   title = "Studio agents",
   subtitle = "You on the right. Specialists on the left, color-coded by role.",
   emptyHint = "Ask for a slightly harder project, a technique, or attach a photo to convert.",
@@ -65,6 +66,7 @@ export function ChatPanel({
   busy: boolean;
   interrupt?: InterruptEvent | null;
   log: { agent?: string; text: string }[];
+  error?: string | null;
   title?: string;
   subtitle?: string;
   emptyHint?: string;
@@ -78,7 +80,7 @@ export function ChatPanel({
     const el = scroller.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, [log, interrupt, busy]);
+  }, [log, interrupt, busy, error]);
 
   return (
     <section className="flex h-[min(32rem,calc(100dvh-8rem))] max-h-[calc(100dvh-8rem)] min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-ink/10 bg-[linear-gradient(180deg,#faf6ef_0%,#f4eadc_100%)] shadow-card lg:h-[calc(100dvh-8rem)]">
@@ -118,6 +120,12 @@ export function ChatPanel({
           );
         })}
         {busy && <WaitNote />}
+        {error && (
+          <div className="rounded-2xl border border-thread/30 bg-thread/10 px-4 py-3 text-sm text-ink" role="alert">
+            <p className="font-medium text-thread">Chat is unavailable</p>
+            <p className="mt-1 leading-relaxed text-ink/80">{error}</p>
+          </div>
+        )}
         {interrupt?.palette && onResume && (
           <div className="rounded-2xl border border-gold/50 bg-white p-4 shadow-sm">
             <p className="text-sm font-medium">Approve this palette?</p>

@@ -1,4 +1,5 @@
 import type { ChatEvent } from "./types";
+import { friendlyChatError } from "./chatError";
 
 function detailFromBody(text: string) {
   try {
@@ -50,7 +51,7 @@ export async function studioChat(body: {
     body: JSON.stringify(body),
   });
   if (!res.ok) {
-    throw new Error(detailFromBody(await res.text()));
+    throw new Error(friendlyChatError(detailFromBody(await res.text())));
   }
   return res;
 }
@@ -65,6 +66,6 @@ export async function studioResume(body: {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
   });
-  if (!res.ok) throw new Error(detailFromBody(await res.text()));
+  if (!res.ok) throw new Error(friendlyChatError(detailFromBody(await res.text())));
   return res;
 }

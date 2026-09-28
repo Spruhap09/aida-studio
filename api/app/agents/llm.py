@@ -39,6 +39,49 @@ def get_llm(streaming: bool = True):
     )
 
 
+CHAT_LIMIT_MESSAGE = (
+    "Chat is paused because this demo hit its OpenAI usage limit. "
+    "Photo convert and clay lessons still work. Try again later."
+)
+CHAT_RATE_MESSAGE = (
+    "Chat is temporarily rate-limited. Wait a minute and send again. "
+    "Photo convert still works."
+)
+
+
+def public_chat_error(exc: BaseException) -> str:
+    if isinstance(exc, LlmNotConfigured):
+        return str(exc)
+    blob = " ".join(
+        [
+            type(exc).__name__,
+            str(exc),
+            str(getattr(exc, "code", "") or ""),
+            str(getattr(exc, "status_code", "") or ""),
+            str(getattr(exc, "type", "") or ""),
+        ]
+    ).lower()
+    if any(
+        marker in blob
+        for marker in (
+            "insufficient_quota",
+            "exceeded your current quota",
+            "billing_not_active",
+            "monthly budget",
+            "usage limit",
+            "budget exceeded",
+            "spending limit",
+        )
+    ):
+        return CHAT_LIMIT_MESSAGE
+    if any(
+        marker in blob
+        for marker in ("ratelimit", "rate_limit", "rate limit", "too many requests", " 429", "error code: 429")
+    ):
+        return CHAT_RATE_MESSAGE
+    return "Chat failed just now. Photo convert and clay lessons still work. Try again in a moment."
+
+
 def llm_ready() -> bool:
     try:
         get_llm()

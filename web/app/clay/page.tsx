@@ -6,6 +6,7 @@ import { LessonVideo } from "@/components/LessonVideo";
 import { Nav } from "@/components/Nav";
 import { ApiStatusBanner } from "@/components/ApiStatusBanner";
 import { fetchLessons } from "@/lib/api";
+import { friendlyChatError } from "@/lib/chatError";
 import { useApiHealth } from "@/lib/health";
 import fallbackLessons from "@/data/clay-lessons.json";
 import { readSse, studioChat } from "@/lib/sse";
@@ -92,10 +93,10 @@ export default function ClayPage() {
             return [...prev, { agent: who, text: event.text }];
           });
         }
-        if (event.type === "error") setError(event.message);
+        if (event.type === "error") setError(friendlyChatError(event.message));
       });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Chat failed");
+      setError(friendlyChatError(err instanceof Error ? err.message : "Chat failed"));
     } finally {
       setBusy(false);
     }
@@ -120,7 +121,6 @@ export default function ClayPage() {
             <p className="mt-1">A pack of air-dry clay, a fork, a cup of water, a plastic bag, and a table you can wipe.</p>
           </div>
           <ApiStatusBanner health={health} chatLabel="The coach on the right" />
-          {error && <p className="mt-3 text-sm text-thread">{error}</p>}
           <ol className="mt-8 space-y-5">
             {lessons.map((lesson) => {
               const clips = clipsFor(lesson);
@@ -197,6 +197,7 @@ export default function ClayPage() {
           <ChatPanel
             log={log}
             busy={busy}
+            error={error}
             onSend={handleChat}
             title="ClayCoach"
             subtitle="Stuck? Ask the way you would ask a friend at the table."

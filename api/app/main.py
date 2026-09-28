@@ -14,7 +14,7 @@ from langgraph.types import Command
 from pydantic import BaseModel
 
 from app.agents.graph import get_graph
-from app.agents.llm import LlmNotConfigured, llm_ready
+from app.agents.llm import LlmNotConfigured, llm_ready, public_chat_error
 from app.agents.session import clear_session, get_pattern, set_upload
 from app.agents.traces import log_trace, recent_traces
 from app.clay.lessons import load_lessons
@@ -169,10 +169,10 @@ async def studio_chat(body: ChatRequest):
                 yield _sse({"type": "pattern", "pattern": pattern})
             yield _sse({"type": "done", "thread_id": thread_id})
         except LlmNotConfigured as exc:
-            yield _sse({"type": "error", "message": str(exc)})
+            yield _sse({"type": "error", "message": public_chat_error(exc)})
         except Exception as exc:
             log_trace({"kind": "error", "message": str(exc)})
-            yield _sse({"type": "error", "message": str(exc)})
+            yield _sse({"type": "error", "message": public_chat_error(exc)})
         finally:
             if not keep_upload:
                 clear_session(thread_id)
@@ -199,7 +199,7 @@ async def studio_resume(body: ResumeRequest):
             yield _sse({"type": "done", "thread_id": body.thread_id})
         except Exception as exc:
             log_trace({"kind": "error", "message": str(exc)})
-            yield _sse({"type": "error", "message": str(exc)})
+            yield _sse({"type": "error", "message": public_chat_error(exc)})
         finally:
             clear_session(body.thread_id)
 

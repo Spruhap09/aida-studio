@@ -7,6 +7,7 @@ import { Nav } from "@/components/Nav";
 import { PaletteLegend } from "@/components/PaletteLegend";
 import { ApiStatusBanner } from "@/components/ApiStatusBanner";
 import { convertPattern, fetchCatalog, fileToDataUrl } from "@/lib/api";
+import { friendlyChatError } from "@/lib/chatError";
 import { useApiHealth } from "@/lib/health";
 import { readSse, studioChat, studioResume } from "@/lib/sse";
 import type { CatalogItem, InterruptEvent, Pattern } from "@/lib/types";
@@ -30,6 +31,7 @@ export default function StitchPage() {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [interrupt, setInterrupt] = useState<InterruptEvent | null>(null);
   const [chatBusy, setChatBusy] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCatalog()
@@ -54,6 +56,7 @@ export default function StitchPage() {
   async function handleChat(message: string) {
     setChatBusy(true);
     setError(null);
+    setChatError(null);
     setInterrupt(null);
     setLog((prev) => [...prev, { agent: "you", text: message }]);
     try {
@@ -68,7 +71,7 @@ export default function StitchPage() {
       });
       await consumeStream(res);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Chat failed");
+      setChatError(friendlyChatError(err instanceof Error ? err.message : "Chat failed"));
     } finally {
       setChatBusy(false);
     }
@@ -77,12 +80,13 @@ export default function StitchPage() {
   async function handleResume(approved: boolean, maxColors?: number) {
     if (!threadId) return;
     setChatBusy(true);
+    setChatError(null);
     try {
       const res = await studioResume({ thread_id: threadId, approved, max_colors: maxColors });
       setInterrupt(null);
       await consumeStream(res);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Resume failed");
+      setChatError(friendlyChatError(err instanceof Error ? err.message : "Resume failed"));
     } finally {
       setChatBusy(false);
     }
@@ -130,7 +134,7 @@ export default function StitchPage() {
       }
       if (event.type === "pattern") setPattern(event.pattern);
       if (event.type === "interrupt") setInterrupt(event);
-      if (event.type === "error") setError(event.message);
+      if (event.type === "error") setChatError(friendlyChatError(event.message));
     });
   }
 
@@ -219,6 +223,7 @@ export default function StitchPage() {
           <ChatPanel
             log={log}
             busy={chatBusy}
+            error={chatError}
             interrupt={interrupt}
             onSend={handleChat}
             onResume={handleResume}
