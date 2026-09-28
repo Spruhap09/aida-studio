@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Resume — Spruha Paradkar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Outfit:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <header class="wrap nav">
+      <p class="wordmark"><a href="./index.html">Spruha Paradkar</a></p>
+      <nav>
+        <a href="./index.html">Home</a>
+        <a href="./files/resume.docx">Download Word</a>
+      </nav>
+    </header>
+
+    <main id="main" class="wrap resume">
+      <h1>Spruha Paradkar</h1>
+      <p class="contact">
+        Dallas, TX ·
+        <a href="mailto:spruha2001@gmail.com">spruha2001@gmail.com</a> ·
+        <a href="https://www.linkedin.com/in/spruha-paradkar">LinkedIn</a>
+      </p>
+
+      <h2>Technical skills</h2>
+      <p>
+        <strong>Languages:</strong> Java, JavaScript, TypeScript, Python, Scala, SQL, C++
+      </p>
+      <p>
+        <strong>Full-stack development:</strong> Spring Boot, React, Angular, Node.js, Next.js, FastAPI,
+        RESTful APIs, GraphQL
+      </p>
+      <p>
+        <strong>Engineering practices:</strong> Unit testing (JUnit, Jest), automated testing, code reviews,
+        event-driven architecture, legacy system modernization, production support, on-call incident response
+      </p>
+      <p>
+        <strong>AI and ML:</strong> Claude Code, Cursor, AI-assisted development, LLM applications, multi-agent
+        systems (LangGraph), prompt engineering, machine learning, deep learning (RNN, CNN)
+      </p>
+      <p>
+        <strong>Data and tools:</strong> Relational databases (SQL), MongoDB, Git
+      </p>
+
+      <h2>Work experience</h2>
+      <h3>Software Engineer · Goldman Sachs · Dallas, TX</h3>
+      <p class="when">Jul 2024 – Present</p>
+      <ul>
+        <li>
+          Reverse-engineered a 20+ year-old trading system’s undocumented data architecture through data lineage
+          tracing, schema audits, and system-owner interviews, then rebuilt it as an event-driven architecture
+          with parallel order processing and centralized logging. The redesign eliminated outdated compliance
+          rules and has processed several million orders to date, with improved order mobility and user experience.
+        </li>
+        <li>
+          Built a Python-based trade reconciliation tool with Claude Code, batch-matching 500+ trades per run
+          against Bloomberg data using SQL-normalized order data and a front-end component that surfaced
+          discrepancies for traders, after learning the fixed income order lifecycle to validate matching logic.
+          This raised the trade match rate from 94.2% to 99.6%, cut a ~2-hour biweekly manual process to minutes,
+          and launched a follow-on project to rebuild the legacy reporting system.
+        </li>
+        <li>
+          Built a full-stack feature for a trading application serving high-net-worth clients, enabling more
+          precise trading (Java/Spring Boot backend, TypeScript/React/Angular frontend). Partnered across
+          Business, Compliance, Engineering, and Product to ship it to production without disruption, earning
+          recognition from the Head of Client Relations, US.
+        </li>
+        <li>
+          Maintained production stability on a live trading system by writing integration tests and improving
+          logging, keeping test coverage above 85% on my own code. This caught issues before they reached
+          production during high-stakes trading hours, and included conducting code reviews to uphold code
+          quality across the team.
+        </li>
+        <li>
+          Served on-call for a trading platform supporting multiple asset classes, triaging cross-team issues
+          spanning data errors, latency spikes, and unexpected trade blocks. Traced and resolved a bug affecting
+          ~300 trades and closed an open thread unresolved for a month through root-cause debugging, proactively
+          engaging Product and other teams for short-term fixes, with no major severity incidents during my
+          on-call rotations.
+        </li>
+        <li>
+          Owned technology risk compliance for my team within an enterprise-wide risk program, driving
+          remediation across multiple application security domains despite initially lacking security-domain
+          expertise. Hosted cross-team calls and led joint tech risk initiatives with partner teams, holding
+          stakeholders to deadlines and closing outstanding risk items.
+        </li>
+        <li>
+          Co-Chair of the New Intern and Analyst Committee, organizing firm-wide mentorship and early-career
+          programming.
+        </li>
+      </ul>
+
+      <h3>AI/ML Research Assistant · Stevens Institute of Technology · Hoboken, NJ</h3>
+      <p class="when">Sep 2023 – Apr 2024</p>
+      <ul>
+        <li>
+          Co-authored “Enhanced UAV Classification: Gaining Deeper Insights from Mechanical Vibration over RF
+          Characteristics,” accepted to the 2025 IEEE Aerospace Conference as part of a DARPA-funded senior
+          design project.
+        </li>
+        <li>
+          Contributed to data preprocessing and iterative tuning of an RNN (vibration data) and 1D CNN (5G
+          communication data) to classify UAVs, improving accuracy from 91% to 97% and 85% to 95% respectively
+          through t-SNE-based data curation.
+        </li>
+        <li>
+          Won the 2024 Senior Design Award for Best Computer Science Project, presenting the work at Stevens’
+          2024 Innovation Expo.
+        </li>
+      </ul>
+
+      <h3>Software Engineer Intern · Goldman Sachs · New York City, NY</h3>
+      <p class="when">Jun 2023 – Aug 2023</p>
+      <ul>
+        <li>
+          Developed Java and TypeScript features for a metrics dashboard, improving performance visibility and
+          system monitoring.
+        </li>
+        <li>
+          Enhanced dashboard usability with intuitive updates, streamlining workflows for internal users.
+        </li>
+      </ul>
+
+      <h3>Software Engineer Intern · MEMX · Jersey City, NJ</h3>
+      <p class="when">Jan 2022 – May 2022</p>
+      <ul>
+        <li>
+          Engineered a high-throughput Top of Book Quote system in Java for a startup, scaling processing
+          capacity 5x (200K to 1M quotes/sec) and improving real-time data accuracy.
+        </li>
+        <li>Designed and executed JUnit tests to validate the reliability of critical quote logic.</li>
+      </ul>
+
+      <h2>Education</h2>
+      <h3>Stevens Institute of Technology · B.S. in Computer Science</h3>
+      <p class="when">May 2024</p>
+      <p>GPA: 3.9 · Summa Cum Laude · Dean’s List · VP, Society of Women in CS · Student Representative, CS Department</p>
+    </main>
+  </body>
+</html>

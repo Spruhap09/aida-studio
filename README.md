@@ -62,7 +62,7 @@ Photo convert and clay lessons work without a model key. Chat needs a key on the
 
 A one-page site lives in `site/`. It is a **third** Vercel project (do not change the Aida root directory).
 
-1. Put `resume.pdf` and `paper.pdf` in `site/files/`.
+1. Resume opens as `site/resume.html`. The IEEE paper is `site/files/paper.pdf`.
 2. Edit `site/index.html` if you need to change the Aida live URL, paper title, or email.
 3. In Vercel: **Add New → Project** → same GitHub repo → Root Directory **`site`** → Deploy. No env vars.
 4. Put *this* Vercel URL on applications. Link out to the Aida demo from there.
